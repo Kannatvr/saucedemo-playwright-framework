@@ -24,7 +24,6 @@ data-driven testing, reusable utility helpers, and parallel cross-browser execut
 - Playwright (JS)
 - Page Object Model
 - JSON test data
-- Node.js & VS Code
 
 ---
 

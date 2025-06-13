@@ -1,7 +1,8 @@
 {
-  "items": [
+  "singleProduct": "Sauce Labs Backpack",
+  "multipleProducts": [
     "Sauce Labs Backpack",
-    "Sauce Labs Onesie",
-    "Sauce Labs Fleece Jacket"
+    "Sauce Labs Bike Light",
+    "Sauce Labs Bolt T-Shirt"
   ]
-}
+} 

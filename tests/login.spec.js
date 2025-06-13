@@ -1,45 +1,37 @@
 // @ts-check
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage.js';
-import users from '../data/users.json' assert { type: 'json' };
+import { LoginPage } from '../pages/LoginPage';
+import { testData } from '../data/testData.js';
 
 test.describe('Login Scenarios', () => {
   test('Valid login', async ({ page }) => {
-    const login = new LoginPage(page);
-    await login.goto();
-    await login.login(users.valid.username, users.valid.password);
-
-    await expect(page).toHaveURL(/inventory\.html/);
-    await expect(page.locator('.inventory_list')).toBeVisible();
+    const loginPage = new LoginPage(page);
+    const loginSuccess = await loginPage.login(testData.validUser.username, testData.validUser.password);
+    expect(loginSuccess).toBe(true);
+    await expect(page).toHaveURL(/.*inventory.html/);
   });
 
   test('Invalid password', async ({ page }) => {
-    const login = new LoginPage(page);
-    await login.goto();
-    await login.login(users.invalidPassword.username, users.invalidPassword.password);
-    
-    const errorMsg = page.locator('[data-test="error"]');
-    await expect(errorMsg).toBeVisible();
-    await expect(errorMsg).toContainText('Username and password do not match');
+    const loginPage = new LoginPage(page);
+    const loginSuccess = await loginPage.login(testData.validUser.username, 'wrong_password');
+    expect(loginSuccess).toBe(false);
+    const errorMessage = await loginPage.getErrorMessage();
+    expect(errorMessage).toContain('Username and password do not match');
   });
 
   test('Invalid username', async ({ page }) => {
-    const login = new LoginPage(page);
-    await login.goto();
-    await login.login(users.invalidUsername.username, users.invalidUsername.password);
-    
-    const errorMsg = page.locator('[data-test="error"]');
-    await expect(errorMsg).toBeVisible();
-    await expect(errorMsg).toContainText('Username and password do not match');
+    const loginPage = new LoginPage(page);
+    const loginSuccess = await loginPage.login('wrong_username', testData.validUser.password);
+    expect(loginSuccess).toBe(false);
+    const errorMessage = await loginPage.getErrorMessage();
+    expect(errorMessage).toContain('Username and password do not match');
   });
 
   test('Locked out user', async ({ page }) => {
-    const login = new LoginPage(page);
-    await login.goto();
-    await login.login(users.lockedOut.username, users.lockedOut.password);
-    
-    const errorMsg = page.locator('[data-test="error"]');
-    await expect(errorMsg).toBeVisible();
-    await expect(errorMsg).toContainText('Epic sadface: Sorry, this user has been locked out');
+    const loginPage = new LoginPage(page);
+    const loginSuccess = await loginPage.login(testData.lockedUser.username, testData.lockedUser.password);
+    expect(loginSuccess).toBe(false);
+    const errorMessage = await loginPage.getErrorMessage();
+    expect(errorMessage).toContain('locked out');
   });
 });

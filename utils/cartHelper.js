@@ -7,8 +7,8 @@ import { expect } from '@playwright/test';
  * @param {string[]} productNames 
  */
 export async function verifyCartItems(page, productNames) {
-  for (const name of productNames) {
-    await expect(page.locator('.cart_item_label', { hasText: name })).toBeVisible();
-    console.log(`✅ Verified in cart: ${name}`);
+  for (const productName of productNames) {
+    const item = page.locator('.cart_item_label', { hasText: productName });
+    await expect(item).toBeVisible();
   }
 }

@@ -19,13 +19,16 @@ test.describe('End-to-End Purchase Flow', () => {
     const inventory = new InventoryPage(page);
     const cart = new CartPage(page);
     const checkout = new CheckoutPage(page);
+
     // valid login credentials 
     const { username, password } = users.valid;
     // Get product names from data
     const productNames = products.items; 
     const { firstName, lastName, zip } = checkoutInfo.user1;
+
     await login.goto();
     await login.login(username, password);
+
     // Wait for after successful login
     await inventory.isLoaded();
     // Add prices for later validation
